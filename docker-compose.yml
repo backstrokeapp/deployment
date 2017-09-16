@@ -3,11 +3,13 @@ version: "3.1"
 services:
   redis:
     image: redis
+    restart: always
     ports:
       - "6379:6379"
 
   haproxy:
     image: haproxy
+    restart: always
     ports:
       - "80:80"
       - "9000:9000"
