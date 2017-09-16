@@ -1,0 +1,62 @@
+version: "3.1"
+
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  haproxy:
+    image: haproxy
+    ports:
+      - "80:80"
+      - "9000:9000"
+    depends_on:
+      - server
+      - legacy
+    volumes:
+      - "./haproxy.conf:/usr/local/etc/haproxy/haproxy.cfg"
+
+  worker:
+    image: backstroke/worker
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis:6379
+      # GITHUB_TOKEN
+
+  server:
+    image: backstroke/server
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      # DATABASE_URL
+      DATABASE_REQUIRE_SSL: 'false'
+
+      REDIS_URL: redis://redis:6379
+
+      DEBUG: backstroke:*
+
+      PORT: 8000
+      # SENTRY_CONFIG
+      # GITHUB_TOKEN
+      # GITHUB_CLIENT_ID
+      # GITHUB_CLIENT_SECRET
+      # GITHUB_CALLBACK_URL
+      # SESSION_SECRET
+      CORS_ORIGIN_REGEXP: backstroke\.us
+
+      APP_URL: https://app.backstroke.us
+      API_URL: https://api.backstroke.us
+      ROOT_URL: https://backstroke.us
+
+  legacy:
+    image: backstroke/legacy
+    environment:
+      DEBUG: backstroke:*
+      # GITHUB_TOKEN
+
+volumes:
+  cache:
