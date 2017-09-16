@@ -1,1 +1,4 @@
+backstroke.pem
+backstroke.pem.pub
 docker-compose.yml.production
+docker-compose.yml.development
