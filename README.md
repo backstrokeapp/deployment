@@ -55,6 +55,12 @@ services:
       POSTGRES_DB: docker
 
   worker:
+    depends_on:
+      - redis
+    # Create mock pull requests.
+    # Remove `--pr mock` if you want to make actual pull requests (make sure you know what you're
+    # doing!).
+    command: yarn start -- --pr mock
     environment:
       REDIS_URL: redis://redis:6379
       GITHUB_TOKEN: <insert github personal access token here>
@@ -75,6 +81,7 @@ services:
       SESSION_SECRET: "backstroke development session secret"
       CORS_ORIGIN_REGEXP: .*
 
+      # The locations of a couple other services
       APP_URL: http://localhost:3000
       API_URL: http://localhost:8000
       ROOT_URL: https://backstroke.co
@@ -82,6 +89,15 @@ services:
   legacy:
     environment:
       GITHUB_TOKEN: <insert github personal access token here>
+
+  # Development version of the dashboard.
+  dashboard:
+    image: backstroke/dashboard
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      PORT: 3000
 
 
 volumes:
@@ -142,6 +158,16 @@ it to your needs.
 # Tasks
 When hacking on Backstroke, here are a few tasks that are handy to be able to accomplish when
 debugging a problem.
+
+## Show all webhook operations in the queue
+```
+docker ps
+# Note down the container id for redis
+docker exec -it <CONTAINERID> redis-cli
+> HGETALL rsmq:webhookQueue:Q
+```
+This list also contains statistics, so it's a bit of a pain to read. But all the items that are
+long, random ids are the items in the queue.
 
 ## Inspect all complete webhook operation statuses
 ```

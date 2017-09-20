@@ -51,9 +51,9 @@ services:
       # SESSION_SECRET
       CORS_ORIGIN_REGEXP: backstroke\.us
 
-      APP_URL: https://app.backstroke.us
-      API_URL: https://api.backstroke.us
-      ROOT_URL: https://backstroke.us
+      APP_URL: https://app.backstroke.co
+      API_URL: https://api.backstroke.co
+      ROOT_URL: https://backstroke.co
 
   legacy:
     image: backstroke/legacy
