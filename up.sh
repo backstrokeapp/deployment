@@ -5,7 +5,7 @@ cert="./backstroke.pem"
 compose="./docker-compose.yml"
 haproxy="./haproxy.conf"
 postgres_certs="./postgres_certs"
-ip="138.197.231.165"
+ip="174.138.110.204"
 
 # Create droplet.
 if ! doctl compute droplet ls | grep backstroke 2>&1 > /dev/null; then
