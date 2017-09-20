@@ -29,14 +29,15 @@ Backstroke is being deployed into, the contents of the second docker-compose fil
 
 ## Development
 In development, we want to run all services locally and make it as easy as possible to reset the
-state of the entire application. Here's an example second `development-docker-compose.yml` file that
-has the minimal required configuration to start Backstroke in devlopment mode.
+state of the entire application.
 
 ### Prerequisites
 - A Github [Personal access token](https://github.com/settings/tokens) for the user that will be
   making pull requests. 
 - A Github [oauth application](https://github.com/settings/developers) for Backstroke to use to
   login users. The callback url should be `http://localhost:8000/auth/github/callback`.
+
+1. Copy this example `development-docker-compose.yml` file into your project:
 
 ```yml
 version: "3.1"
@@ -87,9 +88,12 @@ volumes:
   database:
 ```
 
-After placing this file into `development-docker-compose.yml`, run `docker-compose -f
-docker-compose.yml -f development-docker-compose.yml up`. Visit http://localhost:8000 for the
-`server` service and http://localhost:3000 for the `dashboard` service.
+2. Run `docker-compose -f docker-compose.yml -f development-docker-compose.yml up`.
+
+3. Migrate the database. [Here's how](#migrate-database).
+
+4. Visit http://localhost:8000 for the `server` service and http://localhost:3000 for the `dashboard`
+   service.
 
 ### Live-reloading
 In the above configuration, changing server code locally won't restart the service. If you'd like
@@ -111,21 +115,72 @@ server:
     ...
 ...
 ```
-All services should have a `start-dev` npm task associated with them. If not, open an issue.
+All node-based services should have a `start-dev` npm task associated with them. If not, open an
+issue.
 
 ### A note on the worker
 The worker will make **real, live github pull requests** by default. Don't spam other people's
-repositories! However, there [is a flag that can be enabled to ensure the worker won't actually make
-any pull requests](https://github.com/backstrokeapp/worker#arguments).
+repositories! However, there [is a flag that can be enabled to cause the worker to make mock pull
+requests instead of real ones](https://github.com/backstrokeapp/worker#arguments).
 
 ### Running outside Docker
 Sometimes, you'd like to test a service in isolation. Using docker-compose isn't really all that
 helpful in this case. If docker-compose isn't helpful, don't feel like you have to use it.
 
-# Tasks
+# Production
+In production, we use a very similar configuration to development, but with a few key differences:
+- The database isn't hosted in a container, it's external and linked into the project.
+- All services have a `restart: always` section to ensure that they will be restarted if they were
+  to crash.
+- Also, we host another container used to ship logs to an instance of the ELK stack (currently
+  through logz.io) though this isn't required.
 
-## Migrate database
+Since production deployments can change based on many 3rd-party factors, there isn't an example in
+this section. Most likely you should be able to start with the development configuration and talor
+it to your needs.
+
+# Tasks
+When hacking on Backstroke, here are a few tasks that are handy to be able to accomplish when
+debugging a problem.
+
+## Inspect all complete webhook operation statuses
 ```
 docker ps
-docker exec -e DATABASE_URL=postgres://docker:docker@deployment_database_1:5432/docker -it <CONTAINERID> yarn migrate 
+# Note down the container id for redis
+docker exec -it <CONTAINERID> redis-cli
+> KEYS webhook:status:*
+> GET webhook:status:myoperationid
+```
+
+## Tail logs for a service
+```
+docker ps
+# Note down the container id for the service you want
+docker logs -f <CONTAINERID>
+```
+
+## Migrate database (in development)
+```
+docker ps
+# Note down the container id for the server
+docker exec -it <CONTAINERID> yarn migrate 
+```
+
+## Manually run the webhook timer
+Typically, this job runs about every 10 minutes and adds new webhook operations to the queue. If
+you'd like to run it on your own (for development reasons), try this:
+```
+docker ps
+# Note down the container id for the server
+docker exec -it <CONTAINERID> yarn manual-job
+```
+
+## Open a node shell connected to the database
+See [here](https://github.com/backstrokeapp/server/blob/master/CONTRIBUTING.md) for a list of values
+present in this shell, but the TL;DR is that it's all database models and constructs for interacting
+with redis.
+```
+docker ps
+# Note down the container id for the server
+docker exec -it <CONTAINERID> yarn shell
 ```
