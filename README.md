@@ -108,8 +108,9 @@ volumes:
 
 3. Migrate the database. [Here's how](#migrate-database).
 
-4. Visit http://localhost:8000 for the `server` service and http://localhost:3000 for the `dashboard`
-   service.
+4. Visit http://localhost:8000 for the `server` service, http://localhost:3000 for the `dashboard`
+   service, or http://localhost:4000 for the `legacy` service. These ports were defined in the
+   [first docker-compose file](https://github.com/backstrokeapp/deployment/blob/master/docker-compose.yml).
 
 ### Live-reloading
 In the above configuration, changing server code locally won't restart the service. If you'd like

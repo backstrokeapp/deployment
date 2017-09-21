@@ -57,9 +57,17 @@ services:
 
   legacy:
     image: backstroke/legacy
+    ports:
+      - '4000:4000'
+    depends_on:
+      - server
     environment:
       DEBUG: backstroke:*
       # GITHUB_TOKEN
+      PORT: 4000
+
+      API_URL: server:8000
+      ROOT_URL: https://backstroke.co
 
 volumes:
   cache:
