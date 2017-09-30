@@ -106,7 +106,7 @@ volumes:
 
 2. Run `docker-compose -f docker-compose.yml -f development-docker-compose.yml up`.
 
-3. Migrate the database. [Here's how](#migrate-database).
+3. Migrate the database. [Here's how](#migrate-database-in-development).
 
 4. Visit http://localhost:8000 for the `server` service, http://localhost:3000 for the `dashboard`
    service, or http://localhost:4000 for the `legacy` service. These ports were defined in the
