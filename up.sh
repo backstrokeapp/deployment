@@ -5,7 +5,7 @@ cert="./backstroke.pem"
 compose="./docker-compose.yml"
 haproxy="./haproxy.conf"
 postgres_certs="./postgres_certs"
-ip="174.138.110.204"
+ip="45.55.127.101"
 
 # Create droplet.
 if ! doctl compute droplet ls | grep backstroke 2>&1 > /dev/null; then
@@ -14,9 +14,10 @@ if ! doctl compute droplet ls | grep backstroke 2>&1 > /dev/null; then
     --enable-ipv6 \
     --enable-monitoring \
     --enable-private-networking \
+    --tag-names backstroke-compute \
     --image 27493072 \
-    --region nyc1 \
-    --size 1gb \
+    --region nyc3 \
+    --size 2gb \
     --ssh-keys "$(doctl compute ssh-key ls | grep Backstroke | awk '{ print $3 }')" \
     --wait
 else

@@ -156,6 +156,15 @@ Since production deployments can change based on many 3rd-party factors, there i
 this section. Most likely you should be able to start with the development configuration and talor
 it to your needs.
 
+When I deploy the prodiction version of Backstroke, I run `./up.sh`, which does a couple things:
+- Provisions a droplet
+- Assigns a floating ip
+- Copies over the docekr compose file and configurations
+- Restarts all containers with docker-compose.
+
+There's a bit of downtime (~10s), but it works for the small scale deployment that Backstroke
+requires.
+
 # Tasks
 When hacking on Backstroke, here are a few tasks that are handy to be able to accomplish when
 debugging a problem.
