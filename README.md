@@ -40,7 +40,7 @@ state of the entire application.
 1. Copy this example `development-docker-compose.yml` file into your project:
 
 ```yml
-version: "3.1"
+version: "2.2"
 
 services:
 

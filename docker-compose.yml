@@ -1,4 +1,4 @@
-version: "3.1"
+version: "2.2"
 
 services:
   redis:
@@ -49,7 +49,7 @@ services:
       # GITHUB_CLIENT_SECRET
       # GITHUB_CALLBACK_URL
       # SESSION_SECRET
-      CORS_ORIGIN_REGEXP: backstroke\.us
+      CORS_ORIGIN_REGEXP: backstroke\.(co|us)
 
       APP_URL: https://app.backstroke.co
       API_URL: https://api.backstroke.co
