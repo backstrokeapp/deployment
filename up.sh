@@ -63,10 +63,10 @@ scp -i $cert $haproxy root@$ip:/opt/haproxy.conf
 #scp -r -i $cert $postgres_certs root@$ip:/opt/postgres_certs/
 #ssh -i $cert root@$ip 'sudo chmod 600 /opt/postgres_certs/server.key && sudo chown postgres:postgres /opt/postgres_certs/server.key'
 
-echo "* Stopping services..."
-ssh -i $cert root@$ip "cd /opt && ls && docker-compose stop"
+echo "* Disabling local firewall and stopping services..."
+ssh -i $cert root@$ip "ufw disable && cd /opt && ls && docker-compose stop"
 
 echo "* Starting services..."
-ssh -i $cert root@$ip "cd /opt && docker-compose -f docker-compose.yml -f docker-compose.yml.production pull && docker-compose -f docker-compose.yml -f docker-compose.yml.production up -d"
+ssh -i $cert root@$ip "cd /opt && docker-compose -f docker-compose.yml -f docker-compose.yml.production pull && docker-compose -f docker-compose.yml -f docker-compose.yml.production up -d --scale worker=3"
 
 echo "* Done!"
