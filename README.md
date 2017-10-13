@@ -37,7 +37,7 @@ state of the entire application.
 - A Github [oauth application](https://github.com/settings/developers) for Backstroke to use to
   login users. The callback url should be `http://localhost:8000/auth/github/callback`.
 
-1. Copy this example `development-docker-compose.yml` file into your project:
+1. Copy this example `development-docker-compose.yml` file into your project ensuring that you replace all `<user specific values>` with your GitHub details:
 
 ```yml
 version: "2.2"
@@ -171,52 +171,72 @@ debugging a problem.
 
 ## Show all webhook operations in the queue
 ```
-docker ps
+$ docker ps
 # Note down the container id for redis
-docker exec -it <CONTAINERID> redis-cli
+$ docker exec -it <CONTAINERID> redis-cli
 > HGETALL rsmq:webhookQueue:Q
+```
+OR
+```sh
+$ docker exec -it $(docker ps -q --filter "label=com.docker.compose.service=redis") redis-cli
 ```
 This list also contains statistics, so it's a bit of a pain to read. But all the items that are
 long, random ids are the items in the queue.
 
 ## Inspect all complete webhook operation statuses
 ```
-docker ps
+$ docker ps
 # Note down the container id for redis
-docker exec -it <CONTAINERID> redis-cli
+$ docker exec -it <CONTAINERID> redis-cli
 > KEYS webhook:status:*
 > GET webhook:status:myoperationid
 ```
+OR
+```sh
+$ docker exec -it $(docker ps -q --filter "label=com.docker.compose.service=redis") redis-cli
+```
+
 
 ## Tail logs for a service
 ```
-docker ps
+$ docker ps
 # Note down the container id for the service you want
-docker logs -f <CONTAINERID>
+$ docker logs -f <CONTAINERID>
 ```
 
 ## Migrate database (in development)
 ```
-docker ps
+$ docker ps
 # Note down the container id for the server
-docker exec -it <CONTAINERID> yarn migrate 
+$ docker exec -it <CONTAINERID> yarn manual-job
+```
+OR
+```sh
+$ docker exec -it $(docker ps -q --filter "label=com.docker.compose.service=server" --filter ancestor=backstroke/server) yarn migrate 
 ```
 
 ## Manually run the webhook timer
 Typically, this job runs about every 10 minutes and adds new webhook operations to the queue. If
 you'd like to run it on your own (for development reasons), try this:
 ```
-docker ps
+$ docker ps
 # Note down the container id for the server
-docker exec -it <CONTAINERID> yarn manual-job
+$ docker exec -it <CONTAINERID> yarn manual-job
 ```
-
+OR
+```sh
+$ docker exec -it $(docker ps -q --filter "label=com.docker.compose.service=server" --filter ancestor=backstroke/server) yarn manual-job 
+```
 ## Open a node shell connected to the database
 See [here](https://github.com/backstrokeapp/server/blob/master/CONTRIBUTING.md) for a list of values
 present in this shell, but the TL;DR is that it's all database models and constructs for interacting
 with redis.
 ```
-docker ps
+$ docker ps
 # Note down the container id for the server
-docker exec -it <CONTAINERID> yarn shell
+$ docker exec -it <CONTAINERID> yarn shell
+```
+OR
+```sh
+$ docker exec -it $(docker ps -q --filter "label=com.docker.compose.service=server" --filter ancestor=backstroke/server) yarn shell
 ```
