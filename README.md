@@ -208,7 +208,7 @@ $ docker logs -f <CONTAINERID>
 ```
 $ docker ps
 # Note down the container id for the server
-$ docker exec -it <CONTAINERID> yarn manual-job
+$ docker exec -it <CONTAINERID> yarn migrate
 ```
 OR
 ```sh
