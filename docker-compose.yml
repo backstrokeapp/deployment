@@ -33,6 +33,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
+      - database
       - redis
     environment:
       # DATABASE_URL
@@ -54,6 +55,19 @@ services:
       APP_URL: https://app.backstroke.co
       API_URL: https://api.backstroke.co
       ROOT_URL: https://backstroke.co
+
+  operation-dispatcher:
+    image: backstroke/operation-dispatcher
+    depends_on:
+      - database
+      - redis
+    environment:
+      DATABASE_URL: postgres://docker:docker@database:5432/docker
+      DATABASE_REQUIRE_SSL: 'false'
+
+      REDIS_URL: redis://redis:6379
+
+      DEBUG: backstroke:*
 
   legacy:
     image: backstroke/legacy

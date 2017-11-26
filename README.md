@@ -220,8 +220,8 @@ Typically, this job runs about every 10 minutes and adds new webhook operations 
 you'd like to run it on your own (for development reasons), try this:
 ```
 $ docker ps
-# Note down the container id for the server
-$ docker exec -it <CONTAINERID> yarn manual-job
+# Note down the container id for the operation-dispatcher
+$ docker exec -it <CONTAINERID> yarn start:once
 ```
 OR
 ```sh
