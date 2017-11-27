@@ -33,7 +33,6 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - database
       - redis
     environment:
       # DATABASE_URL
@@ -59,7 +58,6 @@ services:
   operation-dispatcher:
     image: backstroke/operation-dispatcher
     depends_on:
-      - database
       - redis
     environment:
       DATABASE_URL: postgres://docker:docker@database:5432/docker
