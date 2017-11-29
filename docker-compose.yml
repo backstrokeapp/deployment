@@ -60,12 +60,14 @@ services:
     depends_on:
       - redis
     environment:
+
       DATABASE_URL: postgres://docker:docker@database:5432/docker
       DATABASE_REQUIRE_SSL: 'false'
 
       REDIS_URL: redis://redis:6379
 
       DEBUG: backstroke:*
+      # GITHUB_TOKEN
 
   legacy:
     image: backstroke/legacy
