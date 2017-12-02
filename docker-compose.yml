@@ -55,6 +55,20 @@ services:
       API_URL: https://api.backstroke.co
       ROOT_URL: https://backstroke.co
 
+  operation-dispatcher:
+    image: backstroke/operation-dispatcher
+    depends_on:
+      - redis
+    environment:
+
+      DATABASE_URL: postgres://docker:docker@database:5432/docker
+      DATABASE_REQUIRE_SSL: 'false'
+
+      REDIS_URL: redis://redis:6379
+
+      DEBUG: backstroke:*
+      # GITHUB_TOKEN
+
   legacy:
     image: backstroke/legacy
     ports:
