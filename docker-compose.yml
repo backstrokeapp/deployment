@@ -26,6 +26,7 @@ services:
     environment:
       REDIS_URL: redis://redis:6379
       DEBUG: backstroke:*
+      # GITHUB_BOT_USERNAME
       # GITHUB_TOKEN
 
   server:
